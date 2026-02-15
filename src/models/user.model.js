@@ -32,8 +32,20 @@ const userSchema = mongoose.Schema(
   { timestamps: true },
 );
 
+// This is the in build middleware of the mongoose,
+// before storing the data in DB it check this method this function
+// If password is modified then only it will hash the password otherwise it will not hash the password and store in DB.
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
+
+// This check the password whenever used type and send it to this method.
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+const userModel = mongoose.model("User", userSchema);
+
+export default userModel;
