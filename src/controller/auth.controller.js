@@ -1,4 +1,4 @@
-import Title from "../../utils/string.js";
+import Title from "../../utils/string.ts";
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
@@ -33,6 +33,7 @@ const userRegisterController = async (req, res) => {
       });
     }
   } catch (error) {
+    log("Error in userRegisterController:", error);
     return res
       .status(500)
       .json({ status: false, message: Title.INTERNAL_SERVER_ERROR });
@@ -42,9 +43,9 @@ const userRegisterController = async (req, res) => {
 const userLoginController = async (req, res) => {
   const { email, password } = req.body;
 
-  const findUser = await userModel.findOne({ email });
+  const findUser = await userModel.findOne({ email }).select("+password");
 
-  const findUserPassword = await userModel.matchPassword(password)
+  const findUserPassword = await findUser.matchPassword(password);
 
   try {
     if (!findUser) {
@@ -52,14 +53,33 @@ const userLoginController = async (req, res) => {
         success: false,
         message: Title.USER_NOT_FOUND,
       });
-    }else if(!findUserPassword){
-      return res.status(401).json({success:false,message:Title.INVALID_PASSWORD})
+    } else if (!findUserPassword) {
+      return res
+        .status(401)
+        .json({ success: false, message: Title.INVALID_PASSWORD });
+    } else {
+      const token = jwt.sign({ id: findUser._id }, process.env.JWT_SECRET, {
+        expiresIn: "3d",
+      });
+
+      res.cookie("token", token);
+
+      return res.status(200).json({
+        message: Title.USER_FOUND_SUCCESSFULLY,
+        token,
+        data: {
+          _id: findUser._id,
+          email: findUser.email,
+          name: findUser.name,
+        },
+      });
     }
   } catch (error) {
-    res
+    console.log("Error in userLoginController:", error);
+    return res
       .status(500)
       .json({ status: false, message: Title.INTERNAL_SERVER_ERROR });
   }
 };
 
-export default userRegisterController;
+export default { userRegisterController, userLoginController };

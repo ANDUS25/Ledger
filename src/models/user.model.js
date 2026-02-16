@@ -41,8 +41,8 @@ userSchema.pre("save", async function () {
 });
 
 // This check the password whenever used type and send it to this method.
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+userSchema.methods.matchPassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
 };
 
 const userModel = mongoose.model("User", userSchema);
