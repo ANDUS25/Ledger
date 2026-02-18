@@ -13,7 +13,7 @@ const accountSchema = new mongoose.Schema(
     status: {
       enum: {
         values: ["ACTIVE", "FROZEN", "CLOSED"],
-        message: "Status must be either ACTIVE, FROZEN, or CLOSED",
+        message: ["Status must be either ACTIVE, FROZEN, or CLOSED"],
       },
     },
     currency: {
@@ -24,6 +24,10 @@ const accountSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+// using this we can find the user using either user id or the status (check in accountSchema for user and status field)
+// This know as a compound index.
+accountSchema.index({ user: 1, status: 1 });
 
 const accountModel = mongoose.model("Account", accountSchema);
 

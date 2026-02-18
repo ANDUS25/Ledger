@@ -1,6 +1,9 @@
 import express from "express";
-import authRouter from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
+
+// custom routes used as a middleware in the app.js file. 
+import authRouter from "./routes/auth.route.js";
+import accountRouter from "./routes/account.route.js";
 
 const app = express();
 
@@ -8,6 +11,8 @@ app.use(express.json());
 // CookieParse is used for the to configure the server, pass the jwt token in cookie and use as a middleware.
 app.use(cookieParser());
 
+// custom route used a middleware 
 app.use("/api/auth", authRouter);
+app.use("/api/accounts", accountRouter);
 
 export default app;
