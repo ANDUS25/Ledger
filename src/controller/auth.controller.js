@@ -1,6 +1,7 @@
 import Title from "../../utils/string.ts";
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import sendRegistrationEmail from "../service/email.service.js";
 
 const userRegisterController = async (req, res) => {
   const { email, name, password } = req.body;
@@ -31,9 +32,11 @@ const userRegisterController = async (req, res) => {
           name: createdUser.name,
         },
       });
+
+      await sendRegistrationEmail(createdUser.name, createdUser.email);
     }
   } catch (error) {
-    log("Error in userRegisterController:", error);
+    console.log("Error in userRegisterController:", error);
     return res
       .status(500)
       .json({ status: false, message: Title.INTERNAL_SERVER_ERROR });
