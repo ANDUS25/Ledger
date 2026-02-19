@@ -37,9 +37,10 @@ const userRegisterController = async (req, res) => {
     }
   } catch (error) {
     console.log("Error in userRegisterController:", error);
-    return res
-      .status(500)
-      .json({ status: false, message: Title.INTERNAL_SERVER_ERROR });
+    return res.status(500).json({
+      status: false,
+      message: error?.message || Title.INTERNAL_SERVER_ERROR,
+    });
   }
 };
 
@@ -68,7 +69,7 @@ const userLoginController = async (req, res) => {
       res.cookie("token", token);
 
       return res.status(200).json({
-        message: Title.USER_FOUND_SUCCESSFULLY,
+        message: Title.USER_LOGIN_SUCCESSFULLY,
         token,
         data: {
           _id: findUser._id,

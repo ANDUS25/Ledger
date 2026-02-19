@@ -3,7 +3,7 @@ const Title = {
   INTERNAL_SERVER_ERROR: "Internal Server Error",
   INVALID_PASSWORD: "Invalid Password",
   USER_CREATED_SUCCESSFULLY: "User created successfully",
-  USER_FOUND_SUCCESSFULLY: "User found successfully",
+  USER_LOGIN_SUCCESSFULLY: "User Login successfully",
   USER_NOT_FOUND: "User not found",
 };
 
