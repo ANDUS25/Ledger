@@ -2,7 +2,7 @@ import accountModel from "../models/account.model.js";
 
 const createAccountController = async (req, res) => {
   const user = res.user;
-  const account = await accountModel.crate({
+  const account = await accountModel.create({
     user: user._id,
   });
 
