@@ -47,9 +47,9 @@ const userRegisterController = async (req, res) => {
 const userLoginController = async (req, res) => {
   const { email, password } = req.body;
 
-  const findUser = await userModel.findOne({ email }).select("+password");
+  const findUser = await userModel?.findOne({ email }).select("+password");
 
-  const findUserPassword = await findUser.matchPassword(password);
+  const findUserPassword = await findUser?.matchPassword(password);
 
   try {
     if (!findUser) {
